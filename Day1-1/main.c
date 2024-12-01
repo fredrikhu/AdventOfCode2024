@@ -48,6 +48,7 @@ int main()
 		current_line++;
 	}
 	printf("%d\n", accumulated_distance);
+	free(file_content);
 	return 0;
 }
 

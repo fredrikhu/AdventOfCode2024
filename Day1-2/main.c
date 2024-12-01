@@ -66,6 +66,7 @@ int main()
 		current_line++;
 	}
 	printf("sim %d\n", similarity_score);
+	free(file_content);
 	return 0;
 }
 
