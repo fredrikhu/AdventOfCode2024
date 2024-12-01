@@ -100,7 +100,7 @@ char *read_file(char const path[static 1])
 		if (read_bytes != length)
 		{
 			free(buffer);
-			return NULL;
+			buffer = NULL;
 		}
 	}
 
