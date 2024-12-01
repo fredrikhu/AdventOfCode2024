@@ -11,20 +11,20 @@ typedef struct {
 } list_item;
 
 list_item next_distance(char **string);
-int count_lines(char const string[static 1]);
+unsigned int count_lines(char const string[static 1]);
 int compare_int(const void *x, const void *y) { return *(int *)x - *(int *)y; }
 
 int main()
 {
-	int accumulated_distance = 0;
+	unsigned int accumulated_distance = 0;
 	char *file_content = read_file("input.txt");
 	char *file_iterator = file_content;
-	int lines = count_lines(file_content);
+	unsigned int lines = count_lines(file_content);
 
 	int left[lines];
 	int right[lines];
 
-	int current_line = 0;
+	unsigned int current_line = 0;
 	while (*file_iterator!= '\0')
 	{
 		list_item item = next_distance(&file_iterator);
@@ -66,9 +66,9 @@ list_item next_distance(char **string)
 	};
 }
 
-int count_lines(char const string[static 1])
+unsigned int count_lines(char const string[static 1])
 {
-	int lines = 0;
+	unsigned int lines = 0;
 	while (*string != '\0')
 	{
 		if (*string == '\n')

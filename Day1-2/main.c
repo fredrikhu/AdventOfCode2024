@@ -16,7 +16,6 @@ int compare_int(const void *x, const void *y) { return *(unsigned int *)x - *(un
 
 int main()
 {
-	unsigned int similarity_score = 0;
 	char *file_content = read_file("input.txt");
 	char *file_iterator = file_content;
 	unsigned int lines = count_lines(file_content);
@@ -43,6 +42,7 @@ int main()
 
 	current_line = 0;
 	unsigned int right_line = 0;
+	unsigned int similarity_score = 0;
 	while (current_line < lines)
 	{
 		unsigned int count = 0;
