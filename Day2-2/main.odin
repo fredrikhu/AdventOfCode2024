@@ -27,15 +27,9 @@ main :: proc() {
 		for number_as_string, index in numbers_as_string {
 			numbers[index] = strconv.atoi(number_as_string)
 		}
-		dampener_used := false
 
-		//diff := math.abs(numbers[0] - numbers[1])
-		//if diff == 0 || diff > 3 {
-		//	ordered_remove(&numbers, 0)
-		//	dampener_used = true
-		//}
-
-		if safe_route(numbers, false, 1) {
+		fmt.eprintln(numbers)
+		if is_safe(numbers, false) {
 			count += 1
 		}
 	}
@@ -43,32 +37,60 @@ main :: proc() {
 	fmt.printf("%d", count)
 }
 
-safe_route :: proc(numbers: [dynamic]int, dampener_used: bool, i: int) -> bool {
-	i := i
+is_safe :: proc(numbers: [dynamic]int, dampener_used: bool) -> bool {
 	numbers := numbers
-	up := numbers[1] > numbers[0]
-	for i < len(numbers) {
-		diff := math.abs(numbers[i] - numbers[i - 1])
-		if up != (numbers[i] > numbers[i - 1]) || diff == 0 || diff > 3 {
+
+	for number, index in numbers {
+		i := index + 1
+		up := numbers[1] - numbers[0] > 0
+		if i == len(numbers) {
+			return true
+		}
+
+		if numbers[i] == numbers[i - 1] {
 			if dampener_used {
 				return false
 			}
-			if i + 1 == len(numbers) {
+
+			modified_numbers := slice.clone_to_dynamic(numbers[:])
+			defer free(&modified_numbers)
+			ordered_remove(&modified_numbers, i - 1)
+			fmt.eprintln(modified_numbers)
+			return is_safe(modified_numbers, true)
+		}
+
+		if abs(numbers[i] - numbers[i - 1]) > 3 || (numbers[i] - numbers[i - 1] > 0) != up {
+			if dampener_used {
+				return false
+			}
+
+			modified_numbers := slice.clone_to_dynamic(numbers[:])
+			defer free(&modified_numbers)
+			ordered_remove(&modified_numbers, i)
+			fmt.eprintln(modified_numbers)
+			if is_safe(modified_numbers, true) {
 				return true
 			}
-			left := slice.clone_to_dynamic(numbers[:])
-			defer delete(left)
-			right := slice.clone_to_dynamic(numbers[:])
-			defer delete(right)
 
-			ordered_remove(&left, i - 1)
-			ordered_remove(&right, i)
-			fmt.println(numbers)
-			fmt.println(left)
-			fmt.println(right)
-			return safe_route(left, true, 1) || safe_route(right, true, 1)
+			modified_numbers = slice.clone_to_dynamic(numbers[:])
+			defer free(&modified_numbers)
+			ordered_remove(&modified_numbers, i - 1)
+			fmt.eprintln(modified_numbers)
+			if is_safe(modified_numbers, true) {
+				return true
+			}
+
+			if i < 2 {
+				return false
+			}
+
+			modified_numbers = slice.clone_to_dynamic(numbers[:])
+			defer free(&modified_numbers)
+			ordered_remove(&modified_numbers, i - 2)
+			fmt.eprintln(modified_numbers)
+			return is_safe(modified_numbers, true)
 		}
-		i += 1
 	}
+
 	return true
 }
